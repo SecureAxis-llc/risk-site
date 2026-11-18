@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecureAxis Risk | Cyber risk reporting you can prove</title>
+<meta name="description" content="SecureAxis Risk turns the security tools you already own into monthly, audit-traceable reporting mapped to NIST CSF 2.0, CIS v8, PCI DSS 4.0.1 and GDPR. Self-hosted. In development, pilots open.">
+<link rel="canonical" href="https://risk.secureaxis.net/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SecureAxis Risk by SecureAxis">
+<meta property="og:title" content="Cyber risk you can prove.">
+<meta property="og:description" content="Monthly security reporting where every number traces to its source file. Self-hosted, pilots open.">
+<meta property="og:url" content="https://risk.secureaxis.net/">
+<meta property="og:image" content="https://risk.secureaxis.net/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cyber risk you can prove.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "@id": "https://risk.secureaxis.net/#software", "name": "SecureAxis Risk", "url": "https://risk.secureaxis.net/", "image": "https://risk.secureaxis.net/og.jpg", "applicationCategory": "SecurityApplication", "operatingSystem": "Linux (Docker)", "description": "SecureAxis Risk turns the security tools you already own into monthly, audit-traceable reporting mapped to NIST CSF 2.0, CIS v8, PCI DSS 4.0.1 and GDPR. Self-hosted. In development, pilots open.", "creativeWorkStatus": "Draft", "publisher": {"@type": "Organization", "@id": "https://secureaxis.net/#organization", "name": "SecureAxis", "url": "https://secureaxis.net/"}}, {"@context": "https://schema.org", "@type": "FAQPage", "@id": "https://risk.secureaxis.net/#faq", "mainEntity": [{"@type": "Question", "name": "Does it replace our security tools?", "acceptedAnswer": {"@type": "Answer", "text": "No. It reads from the tools you already run, by API or file export, and turns their output into traceable reporting."}}, {"@type": "Question", "name": "Where does our data live?", "acceptedAnswer": {"@type": "Answer", "text": "In your environment. SecureAxis Risk is self-hosted, so evidence files and reports stay on your network."}}, {"@type": "Question", "name": "Which frameworks does it map to?", "acceptedAnswer": {"@type": "Answer", "text": "NIST CSF 2.0 with maturity scoring, CIS Controls v8, PCI DSS 4.0.1 with SAQ profiles, and GDPR. It names the controls and links your evidence to them; it doesn't reproduce the standards' text."}}, {"@type": "Question", "name": "What happens when a number can't be read?", "acceptedAnswer": {"@type": "Answer", "text": "It stays empty and is flagged for someone to fill in. The report never carries last month's value forward or presents an estimate as a fact."}}, {"@type": "Question", "name": "How long is evidence kept?", "acceptedAnswer": {"@type": "Answer", "text": "24 months by default, above PCI DSS's 12-month minimum, with legal hold when you need it. Every access to the vault is logged."}}, {"@type": "Question", "name": "Is it ready to buy?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet. It's in development, and pilots are open for a small number of organisations."}}]}]</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>:root{color-scheme:light;--bg:#ffffff;--ink:#0d2a3a;--soft:#2f4a58;--dim:#5b7280;--line:#d3ddd8;
+--accent:#0b7a57;--onaccent:#ffffff;--accent2:#0b6e8a;--red:#b42318;--green:#0b7a57;--warn:#9a6700;
+--panel:#ffffff;--card:#f5f8f6;--field:#ffffff;--fieldline:#9fb1aa;--code:#0d2a3a;--codebg:#e6f2ec;
+--bgfx:linear-gradient(180deg,#f2f7f4,#ffffff 520px);--band:#0d2a3a;
+--shadow:0 18px 50px rgba(13,42,58,.12);--clip:none;--radius:6px;--cardradius:8px;
+--display:"Instrument Sans","Segoe UI",system-ui,sans-serif;--body:"Instrument Sans","Segoe UI",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;--ease:cubic-bezier(.2,.8,.2,1);--measure:64ch}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg);scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16.5px/1.6 var(--body);
+  background:var(--bgfx)}
+a{color:var(--accent2);text-underline-offset:.2em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1140px;margin:0 auto;padding-left:28px;padding-right:28px}
+.skip{position:absolute;left:-9999px;min-height:44px;display:inline-flex;align-items:center}.skip:focus{left:16px;top:12px;z-index:9;background:var(--accent);color:var(--onaccent);padding:0 14px;min-height:44px;display:inline-flex;align-items:center}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:20px;padding-bottom:4px}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);min-height:44px}
+.brand svg{width:32px;height:32px;flex:none;color:var(--accent)}
+.brand b{font:700 21px/1 var(--display);letter-spacing:.02em}
+.brand small{display:block;font:500 12px/1.3 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.top nav{display:flex;gap:6px 20px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.top nav a{color:var(--dim);text-decoration:none;font:500 13px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;min-height:44px;display:inline-flex;align-items:center}
+.top nav a:hover{color:var(--accent2)}
+
+/* type */
+.eyebrow{font:500 12.5px/1.3 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
+.eyebrow .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:10px;vertical-align:1px}
+h1{font:700 clamp(36px,6vw,64px)/1.02 var(--display);letter-spacing:-.005em;margin:0 0 20px;text-wrap:balance}
+h2{font:700 clamp(27px,3.6vw,40px)/1.1 var(--display);margin:0 0 16px;text-wrap:balance;max-width:24ch}
+h3{font:600 19px/1.3 var(--display);margin:0 0 8px;letter-spacing:.01em}
+.lede{font-size:19px;line-height:1.55;color:var(--soft);max-width:40ch;margin:0 0 28px}
+p{margin:0 0 1em}
+.prose{max-width:var(--measure);color:var(--soft)}
+.prose strong{color:var(--ink)}
+code,kbd{font:500 .9em/1 var(--mono);background:var(--codebg);color:var(--accent2);padding:2px 5px;border-radius:3px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;font:600 14px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;
+  padding:15px 24px;border:1px solid var(--accent);background:var(--accent);color:var(--onaccent);cursor:pointer;text-decoration:none;
+  clip-path:var(--clip);border-radius:var(--radius);transition:transform .25s var(--ease),filter .25s}
+.btn:hover{transform:translateX(3px);filter:brightness(1.1)}
+.btn.alt{background:transparent;color:var(--accent2);border-color:var(--accent2)}
+.btn[disabled]{opacity:.55;cursor:progress;transform:none}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center;padding-top:56px;padding-bottom:84px}
+.status-line{color:var(--dim);font-size:14.5px;margin:16px 0 0}
+
+/* illustration panel */
+.panel{background:var(--panel);border:1px solid var(--line);padding:20px 22px;box-shadow:var(--shadow)}
+.panel .ph{display:flex;justify-content:space-between;gap:12px;align-items:center;font:500 12px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
+.fig-cap{color:var(--dim);font-size:14px;margin:12px 0 0}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:6px 8px;border:1px solid currentColor}
+.chip.bad{color:var(--red)}.chip.warn{color:var(--accent)}.chip.ok{color:var(--green)}.chip.info{color:var(--accent2)}
+.msg{font-size:15px;color:var(--soft);background:var(--card);border:1px solid var(--line);padding:12px 14px;margin:0 0 12px}
+.msg .who{display:block;font:500 12px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.msg s{color:var(--dim)}
+.find{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.find li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:start;font-size:14.5px;color:var(--soft);border-top:1px dashed var(--line);padding-top:8px}
+.find li b{color:var(--ink);font-weight:600}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:14.5px;margin:0}
+.kv dt{font:500 12.5px/1.6 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.kv dd{margin:0;color:var(--soft);overflow-wrap:anywhere}
+.big{font:700 44px/1 var(--display);color:var(--ink)}
+.big small{font:500 15px/1.3 var(--body);color:var(--dim);margin-left:8px}
+.bar{height:8px;background:var(--line);margin:12px 0 16px}.bar i{display:block;height:100%;background:var(--accent)}
+.trace{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:0}
+.trace li{position:relative;padding:0 0 12px 22px;font-size:14px;color:var(--soft);overflow-wrap:anywhere}
+.trace li::before{content:"";position:absolute;left:4px;top:7px;width:8px;height:8px;background:var(--accent2)}
+.trace li:not(:last-child)::after{content:"";position:absolute;left:7.5px;top:17px;bottom:0;width:1px;background:var(--line)}
+.trace b{color:var(--ink);font-weight:600}
+
+/* sections */
+section{padding:76px 0;border-top:1px solid var(--line)}
+.split{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:56px}
+.split > div:first-child p{color:var(--dim);max-width:32ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{border:1px solid var(--line);background:var(--card);padding:20px 20px 18px}
+.card p{color:var(--soft);font-size:15.5px;margin:0}
+.card .src{display:inline-flex;align-items:center;min-height:44px;font-size:14.5px}
+.card .tag{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:12px}
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:3rem minmax(0,1fr);gap:4px 14px;padding:18px 0;border-bottom:1px solid var(--line)}
+ol.steps li:first-child{padding-top:0}
+ol.steps li::before{content:counter(s,decimal-leading-zero);grid-row:span 2;font:600 15px/1.6 var(--mono);color:var(--accent)}
+ol.steps strong{font:600 18px/1.35 var(--display);letter-spacing:.01em}
+ol.steps span{color:var(--soft)}
+ul.facts{list-style:none;margin:0;padding:0;max-width:var(--measure)}
+ul.facts li{padding:13px 0 13px 26px;border-bottom:1px solid var(--line);position:relative;color:var(--soft)}
+ul.facts li::before{content:"";position:absolute;left:0;top:1.3em;width:10px;height:10px;background:var(--accent2);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+ul.facts strong{color:var(--ink)}
+.tbl{width:100%;border-collapse:collapse;font-size:15px}
+.tbl th,.tbl td{text-align:left;padding:12px 12px 12px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font:500 12.5px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.tbl td{color:var(--soft)}
+.tbl td:first-child{color:var(--ink);font-weight:600}
+.tscroll{overflow-x:auto}
+
+/* pipeline */
+.pipe{list-style:none;margin:0 0 20px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.pipe li{border:1px solid var(--line);background:var(--card);padding:14px 12px;position:relative}
+.pipe li b{display:block;font:600 16px/1.3 var(--display);color:var(--ink);margin-bottom:4px}
+.pipe li span{font-size:14px;color:var(--soft);display:block}
+.pipe li .n{font:500 12px/1 var(--mono);color:var(--accent);letter-spacing:.1em;display:block;margin-bottom:8px}
+.pipe2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pipe2 > div{border:1px solid var(--line);padding:14px 12px;background:var(--card)}
+.pipe2 > div.out{border-color:var(--accent)}
+.pipe2 b{display:block;font:600 16px/1.3 var(--display);margin-bottom:4px}
+.pipe2 span{font-size:14px;color:var(--soft)}
+.flow-note{color:var(--dim);font:500 12.5px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin:14px 0 10px}
+
+pre{margin:0;background:var(--code);border:1px solid var(--line);padding:18px;overflow-x:auto;font:500 14px/1.6 var(--mono);color:var(--soft)}
+pre .k{color:var(--accent)}pre .c{color:var(--dim)}pre .s{color:var(--green)}
+
+/* honest + progress */
+.honest{background:var(--band)}
+ol.log{list-style:none;margin:0;padding:0;max-width:var(--measure)}
+ol.log li{display:grid;grid-template-columns:8rem minmax(0,1fr);gap:4px 18px;padding:14px 0;border-bottom:1px solid var(--line)}
+ol.log li:first-child{padding-top:0}
+ol.log time,ol.log .when{font:500 13px/1.6 var(--mono);color:var(--dim);letter-spacing:.06em}
+ol.log strong{display:block;font-weight:600;color:var(--ink)}
+ol.log span{color:var(--soft)}
+ol.log li.next .when{color:var(--accent);font-weight:700}
+
+/* faq */
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:18px;align-items:center;min-height:52px;padding:12px 0;font:600 18px/1.35 var(--display)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:400 26px/1 var(--body);color:var(--accent);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 18px;color:var(--soft);max-width:var(--measure)}
+
+/* form */
+.form{max-width:640px;display:grid;gap:16px}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form label,.form legend{display:grid;gap:7px;font-weight:600;font-size:15px}
+.form .opt{color:var(--dim);font-weight:400}
+.form input,.form select,.form textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--field);border:1px solid var(--fieldline);padding:12px 13px;border-radius:0;min-height:48px}
+.form textarea{min-height:120px;resize:vertical}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--accent2)}
+.form fieldset{border:0;padding:0;margin:0}
+.checks{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:4px}
+.checks label{display:inline-flex;align-items:center;gap:9px;font-weight:400;min-height:44px}
+.checks input{width:20px;height:20px;min-height:0;accent-color:var(--accent)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form .msg-err{color:var(--red);font-weight:600;min-height:1.5em;margin:0}
+.form .note{color:var(--dim);font-size:14.5px;margin:0}
+.done{border:1px solid var(--green);padding:20px 22px;max-width:640px}
+.done h3{color:var(--green)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:30px 0 44px;color:var(--dim);font-size:14.5px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;align-items:center}
+footer p{margin:0;max-width:62ch}
+footer nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+footer nav a{color:var(--dim);min-height:44px;display:inline-flex;align-items:center}
+footer nav a:hover{color:var(--accent2)}
+
+.fig-cap{display:flex;justify-content:space-between;gap:16px;align-items:center}
+.replay{font:inherit;font-size:14px;background:none;border:0;padding:0 4px;min-height:44px;color:var(--accent2);text-decoration:underline;text-underline-offset:.2em;cursor:pointer;flex:none}
+.chip.warn{color:var(--warn)}
+footer .maker{display:flex;align-items:center;gap:10px}
+footer .maker svg{width:28px;height:28px;flex:none}
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:40px;padding-top:40px;padding-bottom:64px}
+  .split{grid-template-columns:minmax(0,1fr);gap:18px}
+  section{padding:56px 0}
+  .pipe{grid-template-columns:1fr 1fr}
+  .pipe2{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .wrap{padding-left:18px;padding-right:18px}
+  .top nav a.opt{display:none}
+  .brand small{display:none}
+  .brand b{font-size:18px}
+  .top nav a{white-space:nowrap;letter-spacing:.08em}
+  .form .two{grid-template-columns:1fr}
+  ol.log li{grid-template-columns:1fr}
+  .pipe{grid-template-columns:1fr}
+  .lede{font-size:18px}
+  .btn{letter-spacing:.1em;padding:15px 18px}
+  .ctas .btn{flex:1 1 100%}
+  .tbl{font-size:14.5px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+.mk-pass,.mk-box,.mk-knob{transform-box:fill-box;transform-origin:center}
+.mk-pass{animation:mkPass 5s ease-in-out infinite}
+@keyframes mkPass{0%,80%,100%{transform:translateX(0);opacity:1}85%{transform:translateX(-5px);opacity:0}86%{transform:translateX(-5px);opacity:0}92%{transform:translateX(0);opacity:1}95%{transform:translateX(2px)}}
+.mk-draw{stroke-dasharray:12;animation:mkDraw 5s ease-in-out infinite}
+@keyframes mkDraw{0%,78%,100%{stroke-dashoffset:0}82%{stroke-dashoffset:12}90%{stroke-dashoffset:0}}
+.mk-box{animation:mkBox 5s ease-in-out infinite}
+@keyframes mkBox{0%,88%,100%{transform:scale(1)}93%{transform:scale(1.3)}}
+.mk-knob{animation:mkKnob 5s cubic-bezier(.2,.8,.2,1) infinite}
+@keyframes mkKnob{0%,78%,100%{transform:translateX(0)}83%,88%{transform:translateX(-9px)}}
+@media (prefers-reduced-motion:reduce){.mk-pass,.mk-draw,.mk-box,.mk-knob{animation:none}}
+
+h1{font-weight:700;letter-spacing:-.025em;font-size:clamp(40px,6.4vw,72px);line-height:1}
+h2{font-weight:700;letter-spacing:-.02em}
+.btn{text-transform:none;letter-spacing:0;font-size:16px;font-weight:600}
+.btn.alt{background:#fff}
+.card,.pipe li,.pipe2>div,.panel{border-radius:var(--cardradius)}
+pre{color:#e6f2ec}
+.honest{color:#e7efeb}.honest h2{color:#fff}.honest .prose,.honest p{color:#c5d6ce}.honest a{color:#7fe0bb}.honest .prose strong{color:#fff}
+.chip.info{color:var(--accent2)}
+/* hero: the trace draws from the number back to its evidence */
+.lg .big{font-variant-numeric:tabular-nums}
+.lg .trace li{opacity:.25;transition:opacity .3s}
+.lg .trace li::before{background:var(--line);transition:background .3s}
+.lg .trace li:not(:last-child)::after{transform-origin:top;transform:scaleY(0);transition:transform .35s;background:var(--accent)}
+.lg.t1 .trace li:nth-child(1),.lg.t2 .trace li:nth-child(-n+2),.lg.t3 .trace li:nth-child(-n+3),.lg.t4 .trace li{opacity:1}
+.lg.t1 .trace li:nth-child(1)::before,.lg.t2 .trace li:nth-child(-n+2)::before,.lg.t3 .trace li:nth-child(-n+3)::before,.lg.t4 .trace li::before{background:var(--accent)}
+.lg.t2 .trace li:nth-child(1)::after,.lg.t3 .trace li:nth-child(-n+2)::after,.lg.t4 .trace li:nth-child(-n+3)::after{transform:scaleY(1)}
+.lg .ok{opacity:0;transition:opacity .3s}.lg.t4 .ok{opacity:1}
+.lg .bar i{transition:width .9s cubic-bezier(.2,.8,.2,1)}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="wrap top">
+  <a class="brand" href="#main" aria-label="SecureAxis Risk, by SecureAxis"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="5.5" cy="18.5" r="3.5" fill="currentColor"/><path class="mk-draw" d="M8 16 16 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect class="mk-box" x="14" y="2.5" width="7.5" height="7.5" rx="1" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><span><b>SecureAxis Risk</b><small>by SecureAxis</small></span></a>
+  <nav aria-label="Page"><a class="opt" href="#how">How it works</a><a class="opt" href="#report">The report</a><a class="opt" href="#faq">FAQ</a><a href="#access-section">Request a pilot</a></nav>
+</header>
+<main id="main">
+
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>In development · pilots open</p>
+      <h1>Cyber risk you can prove.</h1>
+      <p class="lede">SecureAxis Risk turns the security tools you already own into monthly reporting your board and auditors can trace. Every number links back to the source file it came from.</p>
+      <div class="ctas"><a class="btn" href="#access-section">Request a pilot</a><a class="btn alt" href="#how">See how it works</a></div>
+      <p class="status-line">Self-hosted. Works with the tools you have. No rip and replace.</p>
+    </div>
+    <figure style="margin:0">
+      <div class="panel lg" id="hero-ill" role="img" aria-label="Illustration with sample data: a report figure of 37 critical vulnerabilities past their fix deadline, out of 412 devices, traced step by step to the scanner export file, its SHA-256 hash, the parser that read it and the controls it maps to.">
+        <div class="ph"><span>Monthly report · sample data</span><span class="chip info ok">Traceable</span></div>
+        <div class="big"><span data-count="37">37</span><small>of 412 devices</small></div>
+        <p style="margin:6px 0 0;color:var(--soft)">Critical vulnerabilities past their fix deadline</p>
+        <div class="bar" aria-hidden="true"><i style="width:9%"></i></div>
+        <ol class="trace">
+          <li><b>Source file</b> scanner_export_2026-10.csv</li>
+          <li><b>SHA-256</b> 9f2c…e41a, kept 24 months</li>
+          <li><b>Read by</b> vulnerability parser, 0 unreadable fields</li>
+          <li><b>Maps to</b> NIST CSF 2.0 ID.RA · PCI DSS 4.0.1 req. 6</li>
+        </ol>
+      </div>
+      <figcaption class="fig-cap"><span>Illustration with sample data. The percentage always travels with its total.</span> <button class="replay" type="button" data-replay>Replay</button></figcaption>
+    </figure>
+  </div>
+
+  <section id="problem">
+    <div class="wrap split">
+      <div><h2>The tools are there. The proof isn't.</h2><p>Mid-sized companies under PCI DSS, GDPR or cyber-insurance scrutiny usually own the security tools already. What they lack is the evidence layer, and the people, to turn those tools into proof.</p></div>
+      <div class="cards">
+        <div class="card"><span class="tag">01</span><h3>Reporting you can't prove</h3><p>Monthly risk numbers are stitched together by hand from six to eight consoles. When the board or an auditor asks where a number came from, nobody can show the file.</p></div>
+        <div class="card"><span class="tag">02</span><h3>Risk as opinion, not money</h3><p>Most organisations still can't express cyber risk in money, so budgets and insurance answers rest on judgement.</p></div>
+        <div class="card"><span class="tag">03</span><h3>One question, four frameworks</h3><p>NIST, CIS, PCI DSS and GDPR each ask for the same evidence in different shapes, and it gets gathered four times.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap split">
+      <div><h2>How it works</h2></div>
+      <ol class="steps">
+        <li><strong>Bring in what you already run</strong><span>Vulnerability scanners, EDR, identity, asset inventory, MDR reports and awareness training, by API or file export. For example Qualys, SentinelOne and Microsoft Entra ID.</span></li>
+        <li><strong>Keep the evidence</strong><span>Every source file is hashed, kept under a stated retention policy, and every access to it is logged.</span></li>
+        <li><strong>Map once</strong><span>One crosswalk answers NIST CSF 2.0, CIS Controls v8, PCI DSS 4.0.1 and GDPR, so evidence is gathered once.</span></li>
+        <li><strong>Report and respond</strong><span>A monthly report in the format your leadership already reads, plus approved response actions through your own EDR with <a href="https://response.secureaxis.net/">SecureAxis Response</a>.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="principles">
+    <div class="wrap split">
+      <div><h2>Rules it doesn't break</h2></div>
+      <ul class="facts">
+        <li><strong>Empty, never guessed.</strong> A value the parser can't read stays empty and fillable. Never last month's value, never an estimate presented as fact.</li>
+        <li><strong>Works with what you own.</strong> It reads from your existing tools instead of replacing them.</li>
+        <li><strong>Runs in your environment.</strong> Self-hosted, so your evidence never has to leave your network.</li>
+        <li><strong>Percentages carry their totals.</strong> “40% covered” always says “of how many devices”.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="report">
+    <div class="wrap split">
+      <div><h2>What the monthly report covers</h2></div>
+      <div class="cards">
+        <div class="card"><h3>Vulnerabilities</h3><p>Severity trends, fix-deadline compliance, quick wins and devices that keep coming back.</p></div>
+        <div class="card"><h3>Tool coverage</h3><p>Which devices lack EDR, where tools disagree about what exists, and coverage by business unit.</p></div>
+        <div class="card"><h3>Incident response</h3><p>Detection, containment and response times taken from your MDR's monthly report, with the escalation funnel.</p></div>
+        <div class="card"><h3>Security awareness</h3><p>Phishing-test click rates, repeat clickers, and whether assigned training was completed.</p></div>
+        <div class="card"><h3>Frameworks</h3><p>NIST CSF 2.0 with maturity scoring, CIS Controls v8, PCI DSS 4.0.1 with SAQ profiles, and GDPR.</p></div>
+        <div class="card"><h3>Evidence vault</h3><p>A SHA-256 hash per file, 24-month retention, legal hold and a full access log. Files holding bulk employee data are kept as hashes only.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progress" class="honest">
+    <div class="wrap split">
+      <div><h2>Where it stands</h2></div>
+      <div class="prose">
+        <p>SecureAxis Risk is in development, and we're opening pilots for a small number of organisations. There are no customers yet, and we won't pretend otherwise.</p>
+        <p>A pilot runs in your environment against your real tool exports, so you can judge the report on your own numbers. Tell us which frameworks you answer to and which tools you run, and we'll say honestly whether it's a fit today.</p>
+        <p>Need help with a framework assessment rather than software? See <a href="https://secureaxis.net/services/compliance-grc/">compliance and GRC consulting</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap split">
+      <div><h2>Questions</h2></div>
+      <div class="faq"><details><summary>Does it replace our security tools?</summary><p>No. It reads from the tools you already run, by API or file export, and turns their output into traceable reporting.</p></details><details><summary>Where does our data live?</summary><p>In your environment. SecureAxis Risk is self-hosted, so evidence files and reports stay on your network.</p></details><details><summary>Which frameworks does it map to?</summary><p>NIST CSF 2.0 with maturity scoring, CIS Controls v8, PCI DSS 4.0.1 with SAQ profiles, and GDPR. It names the controls and links your evidence to them; it doesn't reproduce the standards' text.</p></details><details><summary>What happens when a number can&#x27;t be read?</summary><p>It stays empty and is flagged for someone to fill in. The report never carries last month's value forward or presents an estimate as a fact.</p></details><details><summary>How long is evidence kept?</summary><p>24 months by default, above PCI DSS's 12-month minimum, with legal hold when you need it. Every access to the vault is logged.</p></details><details><summary>Is it ready to buy?</summary><p>Not yet. It's in development, and pilots are open for a small number of organisations.</p></details></div>
+    </div>
+  </section>
+  <section id="access-section">
+    <div class="wrap split">
+      <div><h2>Request a pilot</h2><p>We're opening pilots for a small number of organisations. Tell us about your environment and we'll reply by email.</p></div>
+      <div>
+<form class="form" id="access" novalidate data-key="risk" data-mailto="mailto:hello@secureaxis.net?subject=%5BSecureAxis%20Risk%5D%20Enquiry%20from%20risk.secureaxis.net&amp;body=Product%3A%20SecureAxis%20Risk%0APage%3A%20risk.secureaxis.net%0A%0A">
+  <div class="two">
+    <label>Name<input name="name" autocomplete="name" required aria-required="true"></label>
+    <label>Work email<input name="email" type="email" autocomplete="email" required aria-required="true"></label>
+  </div>
+  <label><span>Company <span class="opt">(optional)</span></span><input name="company" autocomplete="organization"></label>
+  <label><span>Company size <span class="opt">(optional)</span></span><select name="company_size"><option value="">Choose…</option><option>1–249</option><option>250–999</option><option>1,000–4,999</option><option>5,000–20,000</option><option>More than 20,000</option></select></label><fieldset><legend><span>Frameworks in scope <span class="opt">(optional)</span></span></legend><div class="checks"><label><input type="checkbox" name="frameworks" value="NIST CSF"> NIST CSF</label><label><input type="checkbox" name="frameworks" value="PCI DSS"> PCI DSS</label><label><input type="checkbox" name="frameworks" value="GDPR"> GDPR</label><label><input type="checkbox" name="frameworks" value="Cyber insurance"> Cyber insurance</label><label><input type="checkbox" name="frameworks" value="Other"> Other</label></div></fieldset><label><span>Security tools you run <span class="opt">(optional)</span></span><input name="tools" autocomplete="off"></label>
+  <label><span>Anything else we should know <span class="opt">(optional)</span></span><textarea name="message"></textarea></label>
+  <fieldset><legend><span>Also interested in <span class="opt">(optional)</span></span></legend><div class="checks"><label><input type="checkbox" name="interests" value="glint"> Glint</label><label><input type="checkbox" name="interests" value="gateway"> AI Gateway</label><label><input type="checkbox" name="interests" value="response"> SecureAxis Response</label></div></fieldset>
+  <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+  <p class="msg-err" role="alert"></p>
+  <div><button class="btn" type="submit">Request a pilot ▸</button></div>
+  <p class="note">We reply by email from hello@secureaxis.net. No newsletter. Prefer email? Write to <a href="mailto:hello@secureaxis.net?subject=%5BSecureAxis%20Risk%5D%20Enquiry%20from%20risk.secureaxis.net&amp;body=Product%3A%20SecureAxis%20Risk%0APage%3A%20risk.secureaxis.net%0A%0A">hello@secureaxis.net</a>.</p>
+</form>
+<div class="done" id="access-done" hidden role="status">
+  <h3 tabindex="-1">Thanks, your request has been sent.</h3>
+  <p class="prose" style="margin:0">We've sent a confirmation to <span class="to"></span>, and we'll reply by email. If nothing arrives, email <a href="mailto:hello@secureaxis.net?subject=%5BSecureAxis%20Risk%5D%20Enquiry%20from%20risk.secureaxis.net&amp;body=Product%3A%20SecureAxis%20Risk%0APage%3A%20risk.secureaxis.net%0A%0A">hello@secureaxis.net</a> directly.</p>
+</div></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="maker"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g transform="rotate(23.4 50 50)"><path d="M50 19A31 31 0 0 0 50 81" fill="none" stroke="#7fd0ff" stroke-width="5.5" stroke-linecap="round"/><g fill="none" stroke="#7fd0ff" stroke-width="3.5" stroke-linecap="round"><path d="M50 19A14 31 0 0 0 50 81"/><line x1="22.87" y1="35" x2="50" y2="35"/><line x1="19.00" y1="50" x2="50" y2="50"/><line x1="22.87" y1="65" x2="50" y2="65"/></g><g fill="#7fd0ff" opacity="1"><rect x="53.25" y="24.75" width="5.5" height="5.5"/><rect x="53.25" y="32.25" width="5.5" height="5.5"/><rect x="53.25" y="39.75" width="5.5" height="5.5"/><rect x="53.25" y="47.25" width="5.5" height="5.5"/><rect x="53.25" y="54.75" width="5.5" height="5.5"/><rect x="53.25" y="62.25" width="5.5" height="5.5"/><rect x="53.25" y="69.75" width="5.5" height="5.5"/></g><g fill="#7fd0ff" opacity="0.75"><rect x="61.25" y="25.25" width="4.5" height="4.5"/><rect x="61.25" y="32.75" width="4.5" height="4.5"/><rect x="61.25" y="47.75" width="4.5" height="4.5"/><rect x="61.25" y="55.25" width="4.5" height="4.5"/><rect x="61.25" y="70.25" width="4.5" height="4.5"/></g><g fill="#7fd0ff" opacity="0.5"><rect x="69.2" y="33.2" width="3.6" height="3.6"/><rect x="69.2" y="48.2" width="3.6" height="3.6"/><rect x="69.2" y="63.2" width="3.6" height="3.6"/></g><g fill="#7fd0ff" opacity="0.3"><rect x="77.1" y="41.1" width="2.8" height="2.8"/><rect x="77.1" y="56.1" width="2.8" height="2.8"/></g><g fill="#7fd0ff" opacity="0.16"><rect x="84.9" y="33.9" width="2.2" height="2.2"/><rect x="84.9" y="48.9" width="2.2" height="2.2"/></g><line x1="50" y1="6" x2="50" y2="94" stroke="#e9edf7" stroke-width="5.5" stroke-linecap="round"/><circle cx="50" cy="6" r="5.5" fill="#ffb84a"/></g></svg>
+<p>SecureAxis Risk is built by <a href="https://secureaxis.net/">SecureAxis</a> and is in development. Other products: <a href="https://glint.secureaxis.net/">Glint</a> · <a href="https://gateway.secureaxis.net/">AI Gateway</a> · <a href="https://response.secureaxis.net/">SecureAxis Response</a>.</p></div>
+    <nav aria-label="SecureAxis"><a href="https://secureaxis.net/">SecureAxis</a><a href="https://secureaxis.net/services/">Consulting services</a><a href="mailto:hello@secureaxis.net?subject=%5BSecureAxis%20Risk%5D%20Enquiry%20from%20risk.secureaxis.net&amp;body=Product%3A%20SecureAxis%20Risk%0APage%3A%20risk.secureaxis.net%0A%0A">Email us</a><a href="https://www.linkedin.com/company/secureaxis-net" rel="me">LinkedIn</a></nav>
+  </div>
+</footer>
+<script>
+(function(){
+  var f=document.getElementById('access'); if(!f) return;
+  var err=f.querySelector('.msg-err'), btn=f.querySelector('button[type=submit]'), label=btn.textContent;
+  // Same sign-up service as the Glint waitlist; "product" says which page this came from.
+  var API='https://9r19fvd1ok.execute-api.us-east-2.amazonaws.com/v1/waitlist';
+  f.addEventListener('submit',function(e){
+    e.preventDefault(); err.textContent='';
+    var name=f.name.value.trim(), email=f.email.value.trim();
+    if(!name){err.textContent='Please add your name.';f.name.focus();return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){err.textContent='Please add a valid work email, like you@company.com.';f.email.focus();return}
+    var data={product:f.dataset.key, email:email, website:f.website.value, interests:[]};
+    Array.prototype.forEach.call(f.elements,function(el){
+      if(!el.name||el.name==='website'||el.name==='email'||el.type==='submit')return;
+      if(el.type==='checkbox'){ if(!el.checked)return;
+        if(el.name==='interests'){data.interests.push(el.value)} else {data[el.name]=(data[el.name]?data[el.name]+', ':'')+el.value} return }
+      if(el.value.trim()) data[el.name]=el.value.trim();
+    });
+    btn.disabled=true; btn.textContent='Sending…'; f.setAttribute('aria-busy','true');
+    fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){ if(!r.ok) throw new Error(r.status);
+        f.hidden=true; var d=document.getElementById('access-done'); d.querySelector('.to').textContent=email; d.hidden=false; d.querySelector('h3').focus(); })
+      .catch(function(){ err.textContent="That didn't send. Please try again, or email ";
+        var a=document.createElement('a'); a.href=f.dataset.mailto; a.textContent='hello@secureaxis.net'; err.appendChild(a); err.appendChild(document.createTextNode(' directly.')); })
+      .finally(function(){ btn.disabled=false; btn.textContent=label; f.removeAttribute('aria-busy') });
+  });
+})();
+
+(function(){var el=document.getElementById('hero-ill');if(!el)return;
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function playHero(el,reduce){const S=['t1','t2','t3','t4'];el.classList.remove(...S);const n=el.querySelector('[data-count]'),bar=el.querySelector('.bar i');
+if(reduce){el.classList.add(...S);n.textContent='37';return}
+bar.style.width='0';void el.offsetWidth;let v=0;const t0=performance.now();
+const step=t=>{const k=Math.min(1,(t-t0)/800);n.textContent=Math.round(37*k);bar.style.width=(9*k)+'%';if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step);
+S.forEach((c,i)=>setTimeout(()=>el.classList.add(c),1000+i*420))}
+var started=false;function start(){if(started)return;started=true;playHero(el,reduce)}
+if('IntersectionObserver' in window){new IntersectionObserver(function(es,o){if(es[0].isIntersecting){start();o.disconnect()}},{threshold:.4}).observe(el)}else start();
+var r=document.querySelector('[data-replay]');if(r)r.addEventListener('click',function(){playHero(el,reduce)});
+if(reduce&&r)r.hidden=true;})();
+</script>
+</body>
+</html>
